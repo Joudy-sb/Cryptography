@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from HillCipher import EncryptHC
+from EEA import eea
 import numpy as np 
 
 app = Flask(__name__)
@@ -17,6 +18,10 @@ def hillcipher():
 def playfaircipher():
     return render_template('playfaircipher.html')
 
+@app.route('/eea')
+def extendedeuclidalgo():
+    return render_template('EEA.html')
+
 @app.route('/process_hillcipherEN', methods=['POST'])
 def process_hillcipherEN():
     user_message = request.form['message']
@@ -24,9 +29,7 @@ def process_hillcipherEN():
     rows = user_key.strip('{}').split('},{')
     user_key = [[int(e) for e in row.split(',')] for row in rows]
     user_mod = int(request.form['mod'])
-    # Create an instance of EncryptHC
     cipher = EncryptHC(user_message, user_key, user_mod)
-    # Encrypt the message
     ciphertext = cipher.encrypt(user_message)
     return render_template('hillcipher.html', ciphertext=ciphertext)
 
@@ -37,11 +40,17 @@ def process_hillcipherDC():
     rows = user_key.strip('{}').split('},{')
     user_key = [[int(e) for e in row.split(',')] for row in rows]
     user_mod = int(request.form['mod'])
-    # Create an instance of EncryptHC
     cipher = EncryptHC(user_message, user_key, user_mod)
-    # Encrypt the message
     plaintext = cipher.decrypt(user_message)
     return render_template('hillcipher.html', plaintext=plaintext)
+
+@app.route('/process_eea', methods=['POST'])
+def process_eea():
+    user_b = int(request.form['b'])
+    user_m = int(request.form['m'])
+    obj = eea(user_b,user_m)
+    inverse = obj.findinverse()
+    return render_template('EEA.html', user_b=user_b, user_m=user_m, inverse=inverse)
 
 if __name__ == '__main__':
     app.run()
