@@ -36,15 +36,31 @@ class EncryptPF:
                 if matrix[i][j] == char:
                     return i, j
         return None
+       
+    def preserve_special_char(self,plaintext):
+        special_char = []
+        preserved_text = ""
+        for i in range(0,len(plaintext)):
+            if plaintext[i].isalpha()!=True:
+                special_char.append((plaintext[i],i))
+            else:
+                preserved_text += plaintext[i]
+        return (preserved_text, special_char)
 
+    def add_preserved_special_char(self,ciphertext, special_char):
+        ciphertext = list(ciphertext)
+        for i in special_char: 
+            ciphertext.insert(i[1],i[0])
+        return ''.join(ciphertext)
+
+    
     def playfair_encrypt(self):
         ciphertext = ""
+        preserved_text, special_char = self.preserve_special_char(self.text)
+        preserved_text= preserved_text.lower()
         
-        # Remove any spaces and convert the plaintext to lowercase
-        self.text = self.text.replace(" ", "").lower()
-        
-        for i in range(0, len(self.text), 2):
-            char1, char2 = self.text[i], 'x' if i+1 == len(self.text) else self.text[i+1]
+        for i in range(0, len(preserved_text), 2):
+            char1, char2 = preserved_text[i], 'x' if i+1 == len(preserved_text) else preserved_text[i+1]
             char1n= char1
             char2n= char2
             if char1 == 'j':
@@ -63,16 +79,20 @@ class EncryptPF:
                 # If the characters are not in the same column, use the rules of Playfair cipher
                 encrypted_char1 = self.matrix1[row1_m1][col2_m2]
                 encrypted_char2 = self.matrix2[row2_m2][col1_m1]
-
+            
             ciphertext += encrypted_char1 + encrypted_char2
-        
-        return ciphertext
+        ciphertext = self.add_preserved_special_char(ciphertext, special_char)
+
+        return ''.join(ciphertext)
+
     
     def playfair_decrypt(self):
         plaintext = ""
-        
-        for i in range(0, len(self.text), 2):
-            char1, char2 = self.text[i], self.text[i+1]
+        preserved_text, special_char = self.preserve_special_char(self.text)
+        preserved_text= preserved_text.lower()
+
+        for i in range(0, len(preserved_text), 2):
+            char1, char2 = preserved_text[i], preserved_text[i+1]
             char1n= char1
             char2n= char2
             if char1 == 'j':
@@ -91,8 +111,10 @@ class EncryptPF:
                 decrypted_char2 = self.matrix2[row2_m2][col1_m1]
 
             plaintext += decrypted_char1 + decrypted_char2
-        
-        return plaintext
+        plaintext = self.add_preserved_special_char(plaintext, special_char)
+
+        return ''.join(plaintext)
+
 
 
 

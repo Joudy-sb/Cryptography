@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from HillCipher import EncryptHC
+from Playfair import EncryptPF
 from EEA import eea
 import numpy as np 
 
@@ -51,6 +52,31 @@ def process_eea():
     obj = eea(user_b,user_m)
     inverse = obj.findinverse()
     return render_template('EEA.html', user_b=user_b, user_m=user_m, inverse=inverse)
+
+
+
+@app.route('/process_playfaircipherEC', methods=['POST'])
+def process_playfaircipherEC():
+    user_message = request.form['message']
+    key1 = request.form['key1']
+    key2 = request.form['key2']
+    
+    playfair_cipher = EncryptPF(user_message, key1, key2)
+    ciphertext = playfair_cipher.playfair_encrypt()
+    
+    return render_template('playfaircipher.html', ciphertext=ciphertext)
+
+@app.route('/process_playfaircipherDC', methods=['POST'])
+def process_playfaircipherDC():
+    user_message = request.form['message']
+    key1 = request.form['key1']
+    key2 = request.form['key2']
+    
+    playfair_cipher = EncryptPF(user_message, key1, key2)
+    plaintext = playfair_cipher.playfair_decrypt()
+    
+    return render_template('playfaircipher.html', plaintext=plaintext)
+
 
 if __name__ == '__main__':
     app.run()
