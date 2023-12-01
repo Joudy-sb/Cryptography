@@ -1,61 +1,68 @@
 class polynomial:
-    def __init__(self, fx, gx):
-        self.f = fx
-        self.g = gx
-        self.pow_f = self.polypow_f()
-        self.pow_g = self.polypow_g()
+    # define irreducible polynomial
+    m_irr = {2: 0b111, 3: 0b1101, 4: 0b11001, 5: 0b100101, 6: 0b1000011, 7: 0b10000011, 8: 0b1000110110}
 
-    def polypow_f(self):
-        counter=0
-        pow_x = list()
-        for i in reversed(self.f):
-            if i == "1":
-                pow_x.append(counter)
-                counter+=1
-            if i == "0":
-                counter+=1
-        return pow_x[::-1]
-    
-    def polypow_g(self):
-        counter=0
-        pow_x = list()
-        for i in reversed(self.g):
-            if i == "1":
-                pow_x.append(counter)
-                counter+=1
-            if i == "0":
-                counter+=1
-        return pow_x[::-1]
-    
-    def addition(self):
-        result = list()
-        temp = list()
-        temp.extend(self.pow_f)
-        temp.extend(self.pow_g)
-        for i in temp:
-            if temp.count(i)==1:
-                result.append(i)
+    def __init__(self,f,g,n):
+        self.m = self.m_irr.get(n)
+        self.f= f
+        self.g= g
 
-        return result
-    
     def multiplication(self):
-        result = list()
-        temp = list()
-        for i in self.pow_f:
-            for j in self.pow_g:
-                temp.append(i+j)
-        for i in temp:
-            if temp.count(i)==1:
-                result.append(i)
+        result = 0
+        temp_f = self.f  
+        temp_g = self.g  
 
+        while temp_f > 0:
+            if temp_f & 1:
+                result ^= temp_g
+            temp_g <<= 1
+            temp_f >>= 1
+
+        result = self.mod_reduction(result)
         return result
-                
+
+    def addition(self):
+        return bin(self.f ^ self.g)[2:]
+
+    def substitution(self):
+        return bin(self.f ^ self.g)[2:]
+
+    def mod_reduction(self, h):
+        h_str = bin(h)[2:]  
+
+        m_used = self.m
+        m_str = bin(m_used)[2:]  
+
+        while len(h_str) >= len(m_str):
+            shift = len(h_str) - len(m_str)
+            h ^= m_used << shift
+            h_str = bin(h)[2:]
+
+        return bin(h)[2:] 
+
+    def division(self):
+        temp_f = self.f  
+        temp_g = self.g 
+        
+        f_str = bin(temp_f)[2:]  
+
+        g_str = bin(temp_g)[2:]  
+
+        while len(f_str) >= len(g_str):
+            shift = len(f_str) - len(g_str)
+            temp_f ^= temp_g << shift
+            f_str = bin(temp_f)[2:]
+
+        return bin(temp_f)[2:] 
+
 def main():
-    obj = polynomial(str(101), str(111))
-    print(obj.polypow_f())
-    print(obj.polypow_g())
+    obj = polynomial(0b101,0b111,3)
     print(obj.addition())
+    print(obj.substitution())
     print(obj.multiplication())
+    print(obj.division())
+
+    return 0
 
 if __name__ == "__main__":
     main()
