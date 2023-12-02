@@ -54,6 +54,10 @@ class polynomial:
             f_str = bin(temp_f)[2:]
 
         return bin(temp_f)[2:] 
+    
+    def inverse(self):
+        #write code here
+        pass
 
 def main():
     obj = polynomial(0b101,0b111,3)
