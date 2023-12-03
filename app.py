@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from HillCipher import EncryptHC
 from Playfair import EncryptPF
 from EEA import eea
+# from DES import DES
 import numpy as np 
 
 app = Flask(__name__)
@@ -22,6 +23,10 @@ def playfaircipher():
 @app.route('/eea')
 def extendedeuclidalgo():
     return render_template('EEA.html')
+
+# @app.route('/des')
+# def des():
+#     return render_template('des.html')
 
 @app.route('/process_hillcipherEN', methods=['POST'])
 def process_hillcipherEN():
@@ -77,6 +82,13 @@ def process_playfaircipherDC():
     
     return render_template('playfaircipher.html', plaintext=plaintext)
 
+# @app.route('/process_des', methods=['POST'])
+# def process_des():
+#     user_message = request.form['message']
+#     key= request.form['key']
+#     ciphertext = DES.des_encrypt()
+
+#     return render_template('des.html', ciphertext=ciphertext)
 
 if __name__ == '__main__':
     app.run()
