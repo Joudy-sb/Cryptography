@@ -1,5 +1,7 @@
 import binascii
-
+# Python code to demonstrate 
+# conversion of a hex string 
+# to the binary string 
 
 # function that converts hexadecimal string into binary
 def hex_to_binary(hex_string):
@@ -235,6 +237,8 @@ def substitute_sbox(before_subst):
 ## Function to create map between binary
 ## number and its equivalent hexadecimal
 def createMap(um):
+    ## Function to create map between binary
+## number and its equivalent hexadecimal
 	um["0000"] = '0'
 	um["0001"] = '1'
 	um["0010"] = '2'
@@ -252,37 +256,37 @@ def createMap(um):
 	um["1110"] = 'E'
 	um["1111"] = 'F'
 
-# function to find hexadecimal 
-# equivalent of binary
-def convertBinToHex(bin):
 
+def convertBinToHex(bin):
+## function to find hexadecimal 
+## equivalent of binary
 	l = len(bin)
 	t = bin.find('.')
 	
-	# length of string before '.'
+	## length of string before '.'
 	len_left = None
 	if (t != -1):
 		len_left = t
 	else:
 		len_left = l
 	
-	# add min 0's in the beginning to make
-	# left substring length divisible by 4 
+	## add min 0's in the beginning to make
+	## left substring length divisible by 4 
 	for i in range(1, 1 + (4 - len_left % 4) % 4):
 		bin = '0' + bin;
 	
-	# if decimal point exists 
+	## if decimal point exists 
 	if (t != -1):
-		# length of string after '.'
+		## length of string after '.'
 		len_right = l - len_left - 1
 		
-		# add min 0's in the end to make right
-		# substring length divisible by 4 
+		## add min 0's in the end to make right
+		## substring length divisible by 4 
 		for i in range(1, 1 + (4 - len_right % 4) % 4):
 			bin = bin + '0'
 	
-	# create map between binary and its
-	# equivalent hex code
+	## create map between binary and its
+	## equivalent hex code
 	bin_hex_map = {}
 	createMap(bin_hex_map)
 	
@@ -290,20 +294,20 @@ def convertBinToHex(bin):
 	hex = ""
 	
 	while True:
-		# one by one extract from left, substring
-		# of size 4 and add its hex code
+		## one by one extract from left, substring
+		## of size 4 and add its hex code
 		hex += bin_hex_map[bin[i: i+4]];
 		i += 4;
 		if (i == len(bin)):
 			break;
 			
-		# if '.' is encountered add it
-		# to result
+		## if '.' is encountered add it
+		## to result
 		if (bin[i] == '.'):
 			hex += '.';
 			i+=1
 	
-	# required hexadecimal number
+	## required hexadecimal number
 	return hex;
 
 
@@ -378,8 +382,8 @@ iip_table = [
 def inverse_initial_permutation(left, right):
     return permute_binary(left + right,iip_table)
 
-# Example usage
-message = "02468aceeca86420"
-key = "0f1571c947d9e859"
-des_encrypt(message, key)
+# # Example usage
+# message = "02468aceeca86420"
+# key = "0f1571c947d9e859"
+# des_encrypt(message, key)
 
